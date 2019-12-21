@@ -42,24 +42,24 @@ public class UserServiceImpl implements IUserService {
 
 
 
-//    public ServerResponse<String> register(User user){
-//        ServerResponse validResponse = this.checkValid(user.getUsername(),Const.USERNAME);
-//        if(!validResponse.isSuccess()){
-//            return validResponse;
-//        }
-//        validResponse = this.checkValid(user.getEmail(),Const.EMAIL);
-//        if(!validResponse.isSuccess()){
-//            return validResponse;
-//        }
-//        user.setRole(Const.Role.ROLE_CUSTOMER);
-//        //MD5加密
-//        user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
-//        int resultCount = userMapper.insert(user);
-//        if(resultCount == 0){
-//            return ServerResponse.createByErrorMessage("注册失败");
-//        }
-//        return ServerResponse.createBySuccessMessage("注册成功");
-//    }
+    public ServerResponse<String> register(User user){
+        int resultCount = userMapper.checkUsername(user.getUsername());
+        if(resultCount > 0){
+            return ServerResponse.createBySuccess("用户名已存在");
+        }
+        resultCount = userMapper.checkEmail(user.getEmail());
+        if(resultCount > 0){
+            return ServerResponse.createBySuccess("email已存在");
+        }
+        user.setRole(Const.Role.ROLE_CUSTOMER);
+        //MD5加密
+        user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
+        resultCount = userMapper.insert(user);
+        if(resultCount == 0){
+            return ServerResponse.createByErrorMessage("注册失败");
+        }
+        return ServerResponse.createBySuccessMessage("注册成功");
+    }
 
 //    public ServerResponse<String> checkValid(String str,String type){
 //        if(org.apache.commons.lang3.StringUtils.isNotBlank(type)){
